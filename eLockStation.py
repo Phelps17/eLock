@@ -6,13 +6,16 @@ def unlock_door() :
 	pass
 
 def open_access() :
+	# open access for pubnub requests
 	pass
 
 def close_access() :
+	# close access for pubnub requests
 	pass
 
 def print_passcode() :
-	pass
+	global password
+	print "PASSCODE:", password
 
 def stop_station() :
 	print "eLockStation Stopping..."
@@ -21,7 +24,7 @@ def stop_station() :
 
 def print_help() :
 	global door_name
-	
+
 	print "eLockStation Starting..."
 	print "Door Name: ", door_name
 	print "================ COMMANDS ==============="
@@ -36,8 +39,18 @@ def print_help() :
 def process_command(command) :
 	if (command == "STOP") :
 		stop_station()
+	elif (command == "OPEN") :
+		open_access()
+	elif (command == "CLOSE") :
+		close_access()
+	elif (command == "PASSCODE") :
+		print_passcode()
+	elif (command == "UNLOCK") :
+		unlock_door()
+	elif (command == "HELP") :
+		print_help()
 	else :
-		print command
+		print "COMMAND -", command, "- was not found."
 
 # ================ SET UP ================
 
@@ -58,10 +71,12 @@ running = True
 # ========================================
 
 print_help()
+#TODO: launch a background service here
 
 while (running) :
 	# process commands or display
 	input_string = raw_input()
 	process_command(input_string)
 
+#TODO close background service here
 exit()
