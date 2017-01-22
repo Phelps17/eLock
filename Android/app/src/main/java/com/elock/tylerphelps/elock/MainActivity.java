@@ -2,14 +2,20 @@ package com.elock.tylerphelps.elock;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import java.util.Arrays;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PNConfiguration;
+import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.models.consumer.*;
 
 public class MainActivity extends AppCompatActivity {
+
+    PubNub pubnub;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +24,26 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        PNConfiguration pnConfiguration = new PNConfiguration();
+        pnConfiguration.setSubscribeKey("demo");
+        pnConfiguration.setPublishKey("demo");
+
+        pubnub = new PubNub(pnConfiguration);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                pubnub.publish()
+                        .message(Arrays.asList("Unlock from Android"))
+                        .channel("eLock Server")
+                        .async(new PNCallback<PNPublishResult>() {
+                            @Override
+                            public void onResponse(PNPublishResult result, PNStatus status) {
+                                // handle publish result, status always present, result if successful
+                                // status.isError to see if error happened
+                            }
+                        });
             }
         });
     }
