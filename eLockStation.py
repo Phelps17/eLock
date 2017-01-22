@@ -1,17 +1,39 @@
 # ================ IMPORTS ===============
+from pubnub import Pubnub
+from threading import Thread
+import sys
 
+CHANNEL = "eLock Server"
+PUBNUB_PUBLISH_KEY = "demo"
+PUBNUB_SUBSCRIBE_KEY = "demo"
 # ========================================
 
 def unlock_door() :
-	pass
+	#TODO PySerial Code will go here
+	print "UNLOCKING"
+
+def process_pubnub_message(message, channel) :
+	#just alerting for now
+	print('\a\a\a'),
+
+def pubnub_server() :
+	global PUBNUB
+	PUBNUB.subscribe(CHANNEL, process_pubnub_message)
 
 def open_access() :
 	# open access for pubnub requests
-	pass
+	global server_thread
+
+	server_thread = Thread(target= pubnub_server)
+	server_thread.start()
+	print "eLock is now accessible."
+
 
 def close_access() :
 	# close access for pubnub requests
-	pass
+	global server_thread
+	PUBNUB.unsubscribe(CHANNEL)
+	print "eLock is no longer accessible."
 
 def print_passcode() :
 	global password
@@ -25,23 +47,23 @@ def stop_station() :
 def print_help() :
 	global door_name
 
-	print "eLockStation Starting..."
-	print "Door Name: ", door_name
 	print "================ COMMANDS ==============="
-	print "STOP     - Stop the station"
-	print "OPEN     - Open access to eLock"
-	print "CLOSE    - Close access to eLock"
+	print "EXIT     - Stop the station"
+	print "START    - Open access to eLock"
+	print "STOP     - Close access to eLock"
 	print "PASSCODE - Print door passcode"
 	print "UNLOCK   - Unlock the door"
 	print "HELP     - Print this info again"
 	print "========================================="
 
 def process_command(command) :
-	if (command == "STOP") :
+	command = command.upper()
+
+	if (command == "EXIT") :
 		stop_station()
-	elif (command == "OPEN") :
+	elif (command == "START") :
 		open_access()
-	elif (command == "CLOSE") :
+	elif (command == "STOP") :
 		close_access()
 	elif (command == "PASSCODE") :
 		print_passcode()
@@ -50,33 +72,39 @@ def process_command(command) :
 	elif (command == "HELP") :
 		print_help()
 	else :
-		print "COMMAND -", command, "- was not found."
+		print "Command not found."
 
 # ================ SET UP ================
 
+# generate door name code
+door_name = "HJMqOT2NSh}}|n=)291B$b7/{ThL*{754HTF{QB20<IC34=[!%$U;A<l#FSCV";
+
 print "eLOCK STATION VERSION 1.0"
 running = False
-# generate door name code
-door_name = 123456789;
 
 # get pass code
-print "Enter Door Passcode:"
+print "Enter Door Passcode:",
 password = raw_input()
 
-# ask to start
-print "Press Enter to Start"
-pause_the_start = raw_input()
+print "eLockStation Starting..."
+
+PUBNUB = Pubnub(publish_key=PUBNUB_PUBLISH_KEY,
+                    subscribe_key=PUBNUB_SUBSCRIBE_KEY,
+                    cipher_key='',
+                    ssl_on=False
+                    )
+server_thread = None
+
 running = True
 
 # ========================================
 
 print_help()
-#TODO: launch a background service here
 
 while (running) :
-	# process commands or display
 	input_string = raw_input()
 	process_command(input_string)
 
-#TODO close background service here
-exit()
+close_access()
+sys.exit()
+#TODO need to close threads
