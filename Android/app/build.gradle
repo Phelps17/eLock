@@ -26,6 +26,7 @@ dependencies {
     })
 
     compile group: 'com.pubnub', name: 'pubnub-gson', version: '4.3.0'
+    compile 'de.greenrobot:greendao:2.1.0'
 
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'com.android.support:design:25.0.1'
