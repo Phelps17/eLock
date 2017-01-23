@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
+import android.widget.ListView;
+import android.widget.ArrayAdapter;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.models.consumer.*;
@@ -28,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        populateListView();
 
         PNConfiguration pnConfiguration = new PNConfiguration();
         pnConfiguration.setSubscribeKey("pub-c-a8732a53-6069-4292-8981-a1a9a230172f");
@@ -98,4 +105,19 @@ public class MainActivity extends AppCompatActivity {
                     CommonStatusCodes.getStatusCodeString(resultCode)));
         } else super.onActivityResult(requestCode, resultCode, data);
     }*/
+
+    public void populateListView() {
+        ListView listView = (ListView) findViewById(R.id.scrolling_list);
+
+        // Create and populate a List of planet names.
+        String[] locks = new String[] {"Front Door Lock", "Bedroom Lock"};
+        ArrayList<String> lockList = new ArrayList<String>();
+        lockList.addAll( Arrays.asList(locks) );
+
+        // Create ArrayAdapter using the planet list.
+        ArrayAdapter listAdapter = new ArrayAdapter<String>(this, R.layout.list_row, lockList);
+
+        // Set the ArrayAdapter as the ListView's adapter.
+        listView.setAdapter( listAdapter );
+    }
 }
