@@ -12,7 +12,7 @@
     tools:context="com.elock.tylerphelps.elock.LockInteractionActivity">
 
     <TextView
-        android:text="TextView"
+        android:text="LOCK INTERACTION"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
