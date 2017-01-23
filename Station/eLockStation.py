@@ -1,6 +1,11 @@
+#!/usr/bin/env python
+
 # ================ IMPORTS ===============
 from pubnub import Pubnub
 from threading import Thread
+import BaseHTTPServer
+import CGIHTTPServer
+import cgitb; cgitb.enable()
 import os
 
 CHANNEL = "eLockServer"
@@ -24,9 +29,9 @@ def open_access() :
 	# open access for pubnub requests
 	global server_thread
 
-	server_thread = Thread(target= pubnub_server)
-	server_thread.setDaemon(True)
-	server_thread.start()
+	pubnub_server_thread = Thread(target= pubnub_server)
+	pubnub_server_thread.setDaemon(True)
+	pubnub_server_thread.start()
 	print "eLock is now accessible."
 	#server_thread.join()
 
@@ -44,6 +49,21 @@ def stop_station() :
 	print "eLockStation Stopping..."
 	global running 
 	running = False
+
+def launch_web_server() :
+	web_server_thread = Thread(target= web_server)
+	web_server_thread.setDaemon(True)
+	web_server_thread.start()
+	print "Web interface launched at http://localhost:8000/eLockWeb.py"
+
+def web_server() :
+	server = BaseHTTPServer.HTTPServer
+	handler = CGIHTTPServer.CGIHTTPRequestHandler
+	server_address = ("", 8000)
+	handler.cgi_directories = ["/"]
+ 
+	httpd = server(server_address, handler)
+	httpd.serve_forever()
 
 def print_help() :
 	global door_name
@@ -88,6 +108,8 @@ print "Enter Door Passcode:",
 password = raw_input()
 
 print "eLockStation Starting..."
+
+launch_web_server()
 
 PUBNUB = Pubnub(publish_key=PUBNUB_PUBLISH_KEY,
                     subscribe_key=PUBNUB_SUBSCRIBE_KEY,
