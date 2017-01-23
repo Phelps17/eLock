@@ -7,10 +7,13 @@ import BaseHTTPServer
 import CGIHTTPServer
 import cgitb; cgitb.enable()
 import os
+import webbrowser
+import json
 
-CHANNEL = "eLockServer"
-PUBNUB_PUBLISH_KEY = "pub-c-a8732a53-6069-4292-8981-a1a9a230172f"
-PUBNUB_SUBSCRIBE_KEY = "sub-c-a27f6252-e02e-11e6-989b-02ee2ddab7fe"
+CHANNEL = ""
+PUBNUB_PUBLISH_KEY = ""
+PUBNUB_SUBSCRIBE_KEY = ""
+DOOR_NAME = ""
 # ========================================
 
 def unlock_door() :
@@ -55,6 +58,7 @@ def launch_web_server() :
 	web_server_thread.setDaemon(True)
 	web_server_thread.start()
 	print "Web interface launched at http://localhost:8000/eLockWeb.py"
+	webbrowser.open('http://localhost:8000/eLockWeb.py', new=2)
 
 def web_server() :
 	server = BaseHTTPServer.HTTPServer
@@ -66,8 +70,6 @@ def web_server() :
 	httpd.serve_forever()
 
 def print_help() :
-	global door_name
-
 	print "================ COMMANDS ==============="
 	print "EXIT     - Stop the station"
 	print "START    - Open access to eLock"
@@ -76,6 +78,19 @@ def print_help() :
 	print "UNLOCK   - Unlock the door"
 	print "HELP     - Print this info again"
 	print "========================================="
+
+def parse_in_settings() :
+	with open('Settings.json') as data_file:    
+		data = json.load(data_file)
+
+		global CHANNEL
+		global PUBNUB_PUBLISH_KEY
+		global PUBNUB_SUBSCRIBE_KEY
+		global DOOR_NAME
+		DOOR_NAME = data['door_name']
+		CHANNEL = data['channel']
+		PUBNUB_PUBLISH_KEY = data['pub_key']
+		PUBNUB_SUBSCRIBE_KEY = data['sub_key']
 
 def process_command(command) :
 	command = command.upper()
@@ -97,10 +112,8 @@ def process_command(command) :
 
 # ================ SET UP ================
 
-# generate door name code
-door_name = "HJMqOT2NSh}}|n=)291B$b7/{ThL*{754HTF{QB20<IC34=[!%$U;A<l#FSCV";
-
 print "eLOCK STATION VERSION 1.0"
+parse_in_settings()
 running = False
 
 # get pass code
@@ -117,7 +130,6 @@ PUBNUB = Pubnub(publish_key=PUBNUB_PUBLISH_KEY,
                     ssl_on=False
                     )
 server_thread = None
-
 running = True
 
 # ========================================
