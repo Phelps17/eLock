@@ -1,16 +1,22 @@
 package com.elock.tylerphelps.elock;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.content.Intent;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.models.consumer.*;
 import com.pubnub.api.callbacks.PNCallback;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.elock.tylerphelps.elock.barcode.BarcodeCaptureActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pubnub.publish()
+                /*pubnub.publish()
                         .message("Unlock from Android")
                         .channel("eLockServer")
                         .shouldStore(true)
@@ -48,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
                                     System.out.println("publish worked! timetoken: " + result.getTimetoken());
                                 }
                             }
-                        });
+                        });*/
 
+                Intent intent = new Intent(getApplicationContext(), BarcodeCaptureActivity.class);
+                startActivityForResult(intent, 1);
             }
         });
     }
@@ -75,4 +83,19 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    //TODO handle barcode response codes
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == BARCODE_READER_REQUEST_CODE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    Point[] p = barcode.cornerPoints;
+                    mResultTextView.setText(barcode.displayValue);
+                } else mResultTextView.setText(R.string.no_barcode_captured);
+            } else Log.e(LOG_TAG, String.format(getString(R.string.barcode_error_format),
+                    CommonStatusCodes.getStatusCodeString(resultCode)));
+        } else super.onActivityResult(requestCode, resultCode, data);
+    }*/
 }
