@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PNConfiguration;
@@ -107,12 +108,16 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     public void populateListView() {
+        DatabaseController dc = new DatabaseController(getApplicationContext());
+        List<Lock> savedLocks = dc.getLocks();
+
         ListView listView = (ListView) findViewById(R.id.scrolling_list);
 
         // Create and populate a List of planet names.
-        String[] locks = new String[] {"Front Door Lock", "Bedroom Lock"};
         ArrayList<String> lockList = new ArrayList<String>();
-        lockList.addAll( Arrays.asList(locks) );
+        for (Lock lock : savedLocks) {
+            lockList.add(lock.getNickname());
+        }
 
         // Create ArrayAdapter using the planet list.
         ArrayAdapter listAdapter = new ArrayAdapter<String>(this, R.layout.list_row, lockList);
