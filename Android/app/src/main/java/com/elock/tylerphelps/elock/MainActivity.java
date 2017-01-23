@@ -7,11 +7,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import java.util.Arrays;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PNConfiguration;
-import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.models.consumer.*;
+import com.pubnub.api.callbacks.PNCallback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         PNConfiguration pnConfiguration = new PNConfiguration();
-        pnConfiguration.setSubscribeKey("demo");
-        pnConfiguration.setPublishKey("demo");
+        pnConfiguration.setSubscribeKey("pub-c-a8732a53-6069-4292-8981-a1a9a230172f");
+        pnConfiguration.setPublishKey("sub-c-a27f6252-e02e-11e6-989b-02ee2ddab7fe");
 
         pubnub = new PubNub(pnConfiguration);
 
@@ -35,15 +34,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 pubnub.publish()
-                        .message(Arrays.asList("Unlock from Android"))
-                        .channel("eLock Server")
+                        .message("Unlock from Android")
+                        .channel("eLockServer")
+                        .shouldStore(true)
+                        .usePOST(true)
                         .async(new PNCallback<PNPublishResult>() {
                             @Override
                             public void onResponse(PNPublishResult result, PNStatus status) {
-                                // handle publish result, status always present, result if successful
-                                // status.isError to see if error happened
+                                if (status.isError()) {
+                                    // something bad happened.
+                                    System.out.println("error happened while publishing: " + status.toString());
+                                } else {
+                                    System.out.println("publish worked! timetoken: " + result.getTimetoken());
+                                }
                             }
                         });
+
             }
         });
     }

@@ -1,9 +1,9 @@
 from pubnub import Pubnub
 
-PUBNUB_PUBLISH_KEY = "demo"
-PUBNUB_SUBSCRIBE_KEY = "demo"
+PUBNUB_PUBLISH_KEY = "pub-c-a8732a53-6069-4292-8981-a1a9a230172f"
+PUBNUB_SUBSCRIBE_KEY = "sub-c-a27f6252-e02e-11e6-989b-02ee2ddab7fe"
 
-CHANNEL = "eLock Server"
+CHANNEL = "eLockServer"
 
 if __name__ == "__main__":
     pubnub = Pubnub(publish_key=PUBNUB_PUBLISH_KEY,

@@ -1,11 +1,11 @@
 # ================ IMPORTS ===============
 from pubnub import Pubnub
 from threading import Thread
-import sys
+import os
 
-CHANNEL = "eLock Server"
-PUBNUB_PUBLISH_KEY = "demo"
-PUBNUB_SUBSCRIBE_KEY = "demo"
+CHANNEL = "eLockServer"
+PUBNUB_PUBLISH_KEY = "pub-c-a8732a53-6069-4292-8981-a1a9a230172f"
+PUBNUB_SUBSCRIBE_KEY = "sub-c-a27f6252-e02e-11e6-989b-02ee2ddab7fe"
 # ========================================
 
 def unlock_door() :
@@ -14,7 +14,7 @@ def unlock_door() :
 
 def process_pubnub_message(message, channel) :
 	#just alerting for now
-	print('\a\a\a'),
+	print message
 
 def pubnub_server() :
 	global PUBNUB
@@ -25,9 +25,10 @@ def open_access() :
 	global server_thread
 
 	server_thread = Thread(target= pubnub_server)
+	server_thread.setDaemon(True)
 	server_thread.start()
 	print "eLock is now accessible."
-
+	#server_thread.join()
 
 def close_access() :
 	# close access for pubnub requests
@@ -106,5 +107,4 @@ while (running) :
 	process_command(input_string)
 
 close_access()
-sys.exit()
-#TODO need to close threads
+os._exit(0)
