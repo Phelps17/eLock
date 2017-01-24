@@ -30,7 +30,7 @@ public class LockInteractionActivity extends AppCompatActivity {
         //TODO get lock from intent here
         this.dc = new DatabaseController(getApplicationContext());
         int position = getIntent().getIntExtra("eLockDbPosition", 0);
-        this.lock = dc.getLocks().get(position);
+        this.lock = this.dc.getLocks().get(position);
 
         try {
             PNConfiguration pnConfiguration = new PNConfiguration();
@@ -47,6 +47,7 @@ public class LockInteractionActivity extends AppCompatActivity {
         catch (Exception e) {
             Toast.makeText(this.getApplicationContext(),"Error Loading eLock Data",
                     Toast.LENGTH_SHORT).show();
+            setResult(1, null);
             finish();
         }
 
@@ -55,7 +56,7 @@ public class LockInteractionActivity extends AppCompatActivity {
         unlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendTestMessage();
+                sendUnlockMessage();
             }
         });
 
@@ -65,7 +66,8 @@ public class LockInteractionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(getBaseContext(),"Nickname Saved",
                         Toast.LENGTH_SHORT).show();
-                //TODO name change
+                String newNickname = ((EditText) findViewById(R.id.editText_name)).getText().toString();
+                getDc().renicknameLock(getLock(), newNickname);
             }
         });
 
@@ -75,12 +77,23 @@ public class LockInteractionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(getBaseContext(),"Deleting eLock",
                         Toast.LENGTH_SHORT).show();
-                //TODO delete the lock
+                getDc().deleteLock(getLock());
+
+                setResult(1, null);
+                finish();
             }
         });
     }
 
-    public void sendTestMessage() {
+    public DatabaseController getDc() {
+        return this.dc;
+    }
+
+    public Lock getLock() {
+        return this.lock;
+    }
+
+    public void sendUnlockMessage() {
         //get password connected
         String password = ((EditText) findViewById(R.id.editText_password)).getText().toString();
         String message = USER + " " + this.lock.getIdentifier() + " " + password;
@@ -108,6 +121,7 @@ public class LockInteractionActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         this.pubnub.disconnect();
+        setResult(1, null);
         finish();
     }
 }

@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private static final int BARCODE_READER_REQUEST_CODE = 1;
+    private static final int ELOCK_INTERACT_REQUEST_CODE = 2;
     private DatabaseController dc;
 
     @Override
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         this.dc = new DatabaseController(getApplicationContext());
+
         populateListView();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), BarcodeCaptureActivity.class);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, BARCODE_READER_REQUEST_CODE);
             }
         });
 
@@ -49,11 +51,18 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.d("LOCK SELECTED", ""+ position + "ID: " + id);
+                    try {
+                        Log.d("LOCK SELECTED", ""+ position + "ID: " + id);
 
-                    Intent intent = new Intent(getApplicationContext(), LockInteractionActivity.class);
-                    intent.putExtra("eLockDbPosition",position);
-                    startActivity(intent);
+                        Intent intent = new Intent(getApplicationContext(), LockInteractionActivity.class);
+                        intent.putExtra("eLockDbPosition",position);
+                        startActivityForResult(intent, ELOCK_INTERACT_REQUEST_CODE);
+                    }
+                    catch (Exception e) {
+                        Toast.makeText(getBaseContext(),"Error. Reloading DB.",
+                                Toast.LENGTH_SHORT).show();
+                        populateListView();
+                    }
                 }
             }
         );
@@ -81,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //TODO handle barcode response codes
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BARCODE_READER_REQUEST_CODE) {
@@ -140,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
             else {
                 Log.e("QR CODE SCANNER", "ERROR");
             }
+        }
+        else if (requestCode == ELOCK_INTERACT_REQUEST_CODE) {
+            populateListView();
         }
         else {
             super.onActivityResult(requestCode, resultCode, data);

@@ -62,7 +62,20 @@ public class DatabaseController {
 
     public long getNextLockId() {
         List<Lock> locks = getLocks();
+        if (locks.size() == 0) {
+            return 0;
+        }
+
         return locks.get(locks.size()-1).getId()+1;
+    }
+
+    public void deleteLock(Lock lock) {
+        this.lockDao.delete(lock);
+    }
+
+    public void renicknameLock(Lock lock, String name) {
+        lock.setNickname(name);
+        this.lockDao.insertOrReplace(lock);
     }
 
     private void closeReopenDatabase()
