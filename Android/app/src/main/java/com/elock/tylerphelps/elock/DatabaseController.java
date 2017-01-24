@@ -60,6 +60,11 @@ public class DatabaseController {
         dbHelper.close();
     }
 
+    public long getNextLockId() {
+        List<Lock> locks = getLocks();
+        return locks.get(locks.size()-1).getId()+1;
+    }
+
     private void closeReopenDatabase()
     {
         Log.d("DB", "close reopen");

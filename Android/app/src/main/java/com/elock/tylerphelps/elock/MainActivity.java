@@ -13,14 +13,18 @@ import android.content.Intent;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.elock.tylerphelps.elock.barcode.BarcodeCaptureActivity;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private static final int BARCODE_READER_REQUEST_CODE = 1;
+    private DatabaseController dc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        this.dc = new DatabaseController(getApplicationContext());
         populateListView();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -44,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.e("LOCK SELECTED", ""+ position + "ID: " + id);
+                    Log.d("LOCK SELECTED", ""+ position + "ID: " + id);
 
                     Intent intent = new Intent(getApplicationContext(), LockInteractionActivity.class);
                     intent.putExtra("eLockDbPosition",position);
@@ -85,7 +90,48 @@ public class MainActivity extends AppCompatActivity {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     Point[] p = barcode.cornerPoints;
 
-                    Log.e("QR CODE SCANNER", barcode.displayValue);
+                    String barcodeData = barcode.displayValue;
+                    Log.d("QR CODE SCANNER", barcodeData);
+
+                    try {
+                        JSONObject json = new JSONObject(barcodeData);
+                        long newId = 0;
+                        try {
+                            Lock newLock = new Lock(newId, json.getString("door_name"),
+                                    json.getString("channel"), json.getString("pub_key"),
+                                    json.getString("sub_key"), "New eLock");
+
+                            try {
+                                newLock.setId(this.dc.getNextLockId());
+                                this.dc.addLock(newLock);
+                                Toast.makeText(getBaseContext(),"New eLock Added!",
+                                        Toast.LENGTH_SHORT).show();
+
+                                try {
+                                    populateListView();
+                                }
+                                catch (Exception e) {
+                                    Toast.makeText(getBaseContext(),"Error Reloading ListView",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            catch (Exception e) {
+                                //database errors
+                                Toast.makeText(getBaseContext(),"Error: Could Not Add New Lock",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (Exception e) {
+                            //invalid format
+                            Toast.makeText(getBaseContext(),"Error: Could Not eLock Data",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    catch (Exception e) {
+                        //couldnt parse json data
+                        Toast.makeText(getBaseContext(),"Error: Invalid QR Code Data",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
                     Log.e("QR CODE SCANNER", "Nothing Captured");
@@ -101,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void populateListView() {
-        DatabaseController dc = new DatabaseController(getApplicationContext());
+        this.dc = new DatabaseController(getApplicationContext());
         List<Lock> savedLocks = dc.getLocks();
 
         ListView listView = (ListView) findViewById(R.id.scrolling_list);
@@ -110,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> lockList = new ArrayList<String>();
         for (Lock lock : savedLocks) {
             lockList.add(lock.getNickname());
+            System.out.println(lock.getId() + " " + lock.getIdentifier());
         }
 
         // Create ArrayAdapter using the planet list.
