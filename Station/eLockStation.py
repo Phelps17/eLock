@@ -14,6 +14,7 @@ CHANNEL = ""
 PUBNUB_PUBLISH_KEY = ""
 PUBNUB_SUBSCRIBE_KEY = ""
 DOOR_NAME = ""
+PASSCODE = ""
 # ========================================
 
 def unlock_door() :
@@ -21,9 +22,17 @@ def unlock_door() :
 	print "UNLOCKING"
 
 def process_pubnub_message(message, channel) :
+	global PASSCODE
+
 	try :
 		message_data = message.split(' ')
-		print message_data
+		if (message_data[1] == DOOR_NAME) :
+			if (message_data[2] == PASSCODE) :
+				unlock_door()
+			else :
+				print "Invalid passcode from", message_data[0]
+		else :
+			print "Invalid identifier from", message_data[0]
 	except BaseException :
 		print "Invalid Connection Attempt"
 
@@ -122,11 +131,12 @@ running = False
 # get pass code
 
 while (True) :
-	print "Enter Door Passcode (No Spaces):",
-	password = raw_input()
-	if (len(password.split(' ')) == 1) :
+	print "Enter eLock Passcode (No Spaces):",
+	input_password = raw_input()
+	if (len(input_password.split(' ')) == 1) :
 		break;
 
+PASSCODE = input_password
 print "eLockStation Starting..."
 
 launch_web_server()

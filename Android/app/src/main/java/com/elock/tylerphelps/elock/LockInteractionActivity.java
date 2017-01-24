@@ -19,7 +19,7 @@ public class LockInteractionActivity extends AppCompatActivity {
     private Lock lock;
     private PubNub pubnub;
     private DatabaseController dc;
-    private final String USER = "Android Device";
+    private final String USER = "Android_Device";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +82,7 @@ public class LockInteractionActivity extends AppCompatActivity {
     public void sendTestMessage() {
         //get password connected
         String password = "pswd";
-        String message = USER + " " + this.lock.getId() + " " + password;
+        String message = USER + " " + this.lock.getIdentifier() + " " + password;
 
         this.pubnub.publish()
                 .message(message)
