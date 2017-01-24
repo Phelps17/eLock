@@ -44,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.e("LOCK SELECTED", ""+position);
+                    Log.e("LOCK SELECTED", ""+ position + "ID: " + id);
+
                     Intent intent = new Intent(getApplicationContext(), LockInteractionActivity.class);
+                    intent.putExtra("eLockDbPosition",position);
                     startActivity(intent);
                 }
             }

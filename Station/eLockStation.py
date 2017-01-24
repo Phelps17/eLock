@@ -21,8 +21,11 @@ def unlock_door() :
 	print "UNLOCKING"
 
 def process_pubnub_message(message, channel) :
-	#just alerting for now
-	print message
+	try :
+		message_data = message.split(' ')
+		print message_data
+	except BaseException :
+		print "Invalid Connection Attempt"
 
 def pubnub_server() :
 	global PUBNUB
@@ -117,8 +120,12 @@ parse_in_settings()
 running = False
 
 # get pass code
-print "Enter Door Passcode:",
-password = raw_input()
+
+while (True) :
+	print "Enter Door Passcode (No Spaces):",
+	password = raw_input()
+	if (len(password.split(' ')) == 1) :
+		break;
 
 print "eLockStation Starting..."
 
@@ -134,6 +141,7 @@ running = True
 
 # ========================================
 
+open_access()
 print_help()
 
 while (running) :

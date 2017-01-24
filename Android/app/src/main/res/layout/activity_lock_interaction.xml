@@ -16,7 +16,7 @@
         android:inputType="textPersonName"
         android:text="Name"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/editText_name"
         android:layout_alignParentStart="true"
         android:layout_width="match_parent"/>
 
@@ -24,45 +24,53 @@
         android:text="UnLock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button4"
-        android:layout_alignBottom="@+id/lockNameBox"
-        android:layout_alignParentEnd="true"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Password"
-        android:ems="10"
-        android:id="@+id/lockNameBox"
-        android:layout_marginTop="85dp"
-        android:layout_below="@+id/textView4"
-        android:layout_alignParentStart="true"/>
-
-    <Button
-        android:text="Save Changes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView4"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="11dp"
-        android:id="@+id/button5"/>
-
-    <Button
-        android:text="Delete eLock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button6"
-        android:layout_alignBaseline="@+id/button5"
-        android:layout_alignBottom="@+id/button5"
+        android:id="@+id/btn_unlock"
+        android:layout_alignBottom="@+id/editText_password"
         android:layout_alignParentEnd="true"/>
 
     <TextView
         android:text="eLock Identifier: XXXXXXXXXXXX"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView4"
-        android:layout_marginTop="13dp"
-        android:layout_below="@+id/editText"
+        android:id="@+id/textView_indentifier"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/editText_name"
         android:layout_alignParentStart="true"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editText_password"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/adjustment_btns"
+        android:layout_alignParentStart="true"
+        tools:text="Password"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/textView_indentifier"
+        android:layout_alignParentStart="true"
+        android:id="@+id/adjustment_btns">
+
+        <Button
+            android:text="Save Changes"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:id="@+id/btn_save"/>
+
+        <Button
+            android:text="Delete eLock"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:id="@+id/btn_delete"/>
+
+    </LinearLayout>
 </RelativeLayout>
