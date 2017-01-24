@@ -1,5 +1,6 @@
 package com.elock.tylerphelps.elock;
 
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.pubnub.api.PNConfiguration;
@@ -81,7 +82,7 @@ public class LockInteractionActivity extends AppCompatActivity {
 
     public void sendTestMessage() {
         //get password connected
-        String password = "pswd";
+        String password = ((EditText) findViewById(R.id.editText_password)).getText().toString();
         String message = USER + " " + this.lock.getIdentifier() + " " + password;
 
         this.pubnub.publish()
@@ -106,6 +107,7 @@ public class LockInteractionActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        this.pubnub.destroy();
+        this.pubnub.disconnect();
+        finish();
     }
 }
