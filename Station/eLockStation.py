@@ -69,8 +69,8 @@ def launch_web_server() :
 	web_server_thread = Thread(target= web_server)
 	web_server_thread.setDaemon(True)
 	web_server_thread.start()
-	print "Web interface launched at http://localhost:8000/eLockWeb.py"
-	webbrowser.open('http://localhost:8000/eLockWeb.py', new=2)
+	print "Web interface launched at http://localhost:8000/WebHome.py"
+	webbrowser.open('http://localhost:8000/WebHome.py', new=2)
 
 def web_server() :
 	server = BaseHTTPServer.HTTPServer
