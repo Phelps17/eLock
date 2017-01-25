@@ -1,0 +1,9 @@
+Simple Arduino Set Up:
+	1) Pin A12 to Red LED
+	2) Pin A11 to Blue LED
+	3) Pin A10 to Green LED
+	4) Pin A8 to Lock Relay
+	 - To actually unlock the door
+	5) All LEDs and Relays grounded to GND
+
+ Note: My Red LED quit working so I had to use Blue to indicate a failed attempt. If you want to flash Red for a failed attempt (recommended) set Pin A12 to Blue and set Pin A11 to Red. This will not affect the locking mechanism.
