@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PubNub
 
 class ViewController: UIViewController {
 

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import PubNub
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
