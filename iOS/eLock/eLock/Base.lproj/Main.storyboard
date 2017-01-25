@@ -65,6 +65,9 @@
                                 <rect key="frame" x="16" y="423" width="171" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="UNLOCK"/>
+                                <connections>
+                                    <action selector="unlockButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hhO-SV-IZ9"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="eLock Version 1.0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZMs-zv-rxl">
                                 <rect key="frame" x="35" y="20" width="324" height="61"/>
@@ -112,10 +115,20 @@
                                 <rect key="frame" x="188" y="423" width="171" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="IMPORT FROM QR"/>
+                                <connections>
+                                    <action selector="tryQrPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qGl-U2-Hgn"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
+                    <connections>
+                        <outlet property="channelName" destination="s1b-80-aLe" id="Wih-Hb-ncS"/>
+                        <outlet property="elockID" destination="s5G-S1-CS3" id="r7f-9R-wjg"/>
+                        <outlet property="password" destination="bOL-Cv-MV6" id="0bv-nX-htz"/>
+                        <outlet property="pubKey" destination="s3c-EN-kjk" id="h6Y-xK-DkL"/>
+                        <outlet property="subKey" destination="AHj-nW-beY" id="ZqO-Qh-N8z"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
