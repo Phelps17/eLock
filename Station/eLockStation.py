@@ -9,17 +9,25 @@ import cgitb; cgitb.enable()
 import os
 import webbrowser
 import json
+import serial
+import time
 
 CHANNEL = ""
 PUBNUB_PUBLISH_KEY = ""
 PUBNUB_SUBSCRIBE_KEY = ""
 DOOR_NAME = ""
 PASSCODE = ""
+SERIAL_PORT = "/dev/tty.usbmodem1421"
 # ========================================
 
 def unlock_door() :
 	#TODO PySerial Code will go here
 	print "UNLOCKING"
+	serial.write('1')
+
+def deny_door() :
+	print "DENIED"
+	serial.write('0')
 
 def process_pubnub_message(message, channel) :
 	global PASSCODE
@@ -30,10 +38,13 @@ def process_pubnub_message(message, channel) :
 			if (message_data[2] == PASSCODE) :
 				unlock_door()
 			else :
+				deny_door()
 				print "Invalid passcode from", message_data[0]
 		else :
+			deny_door()
 			print "Invalid identifier from", message_data[0]
 	except BaseException :
+		deny_door()
 		print "Invalid Connection Attempt"
 
 def pubnub_server() :
@@ -149,6 +160,11 @@ PUBNUB = Pubnub(publish_key=PUBNUB_PUBLISH_KEY,
 server_thread = None
 running = True
 
+#set up the arduino connection
+serial = serial.Serial(SERIAL_PORT, 9600)
+time.sleep(1)
+print "Connected to eLock via %s" % serial.name
+
 # ========================================
 
 open_access()
@@ -158,5 +174,6 @@ while (running) :
 	input_string = raw_input()
 	process_command(input_string)
 
+serial.close()
 close_access()
 os._exit(0)
