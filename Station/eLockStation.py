@@ -17,17 +17,19 @@ PUBNUB_PUBLISH_KEY = ""
 PUBNUB_SUBSCRIBE_KEY = ""
 DOOR_NAME = ""
 PASSCODE = ""
-SERIAL_PORT = "/dev/tty.usbmodem1421"
+SERIAL_PORT = ""
 # ========================================
 
 def unlock_door() :
 	#TODO PySerial Code will go here
 	print "UNLOCKING"
-	serial.write('1')
+	if (serial_connected) :
+		serial.write('1')
 
 def deny_door() :
 	print "DENIED"
-	serial.write('0')
+	if (serial_connected) :
+		serial.write('0')
 
 def process_pubnub_message(message, channel) :
 	global PASSCODE
@@ -110,10 +112,12 @@ def parse_in_settings() :
 		global PUBNUB_PUBLISH_KEY
 		global PUBNUB_SUBSCRIBE_KEY
 		global DOOR_NAME
+		global SERIAL_PORT
 		DOOR_NAME = data['door_name']
 		CHANNEL = data['channel']
 		PUBNUB_PUBLISH_KEY = data['pub_key']
 		PUBNUB_SUBSCRIBE_KEY = data['sub_key']
+		SERIAL_PORT = data['serial_port']
 
 def process_command(command) :
 	command = command.upper()
@@ -144,7 +148,7 @@ running = False
 while (True) :
 	print "Enter eLock Passcode (No Spaces):",
 	input_password = raw_input()
-	if (len(input_password.split(' ')) == 1) :
+	if ((input_password != "") and len(input_password.split(' ')) == 1) :
 		break;
 
 PASSCODE = input_password
@@ -159,11 +163,16 @@ PUBNUB = Pubnub(publish_key=PUBNUB_PUBLISH_KEY,
                     )
 server_thread = None
 running = True
+serial_connected = False
 
-#set up the arduino connection
-serial = serial.Serial(SERIAL_PORT, 9600)
-time.sleep(1)
-print "Connected to eLock via %s" % serial.name
+try :
+	#set up the arduino connection
+	serial = serial.Serial(SERIAL_PORT, 9600)
+	time.sleep(1)
+	print "Connected to eLock Hardware via %s" % serial.name
+	serial_connected = True
+except BaseException :
+	print "Could not connect to eLock Hardware. Running in Demo Mode."
 
 # ========================================
 
@@ -174,6 +183,7 @@ while (running) :
 	input_string = raw_input()
 	process_command(input_string)
 
-serial.close()
+if (serial_connected) :
+	serial.close()
 close_access()
 os._exit(0)

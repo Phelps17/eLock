@@ -2,5 +2,6 @@
 	"door_name" : "33WK-5B49-G8SX-3ND6-J2DZ-S89H",
 	"channel" : "eLockServer",
 	"pub_key" : "pub-c-a8732a53-6069-4292-8981-a1a9a230172f",
-	"sub_key" : "sub-c-a27f6252-e02e-11e6-989b-02ee2ddab7fe"
+	"sub_key" : "sub-c-a27f6252-e02e-11e6-989b-02ee2ddab7fe",
+	"serial_port" : "/dev/tty.usbmodem1411"
 }
