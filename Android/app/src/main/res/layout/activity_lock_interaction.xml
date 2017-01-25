@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_lock_interaction"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +10,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.elock.tylerphelps.elock.LockInteractionActivity">
+    tools:context="com.elock.tylerphelps.elock.LockInteractionActivity"
+    app:statusBarBackground="@android:color/holo_red_dark">
 
     <EditText
         android:layout_height="wrap_content"
@@ -20,14 +22,6 @@
         android:layout_alignParentStart="true"
         android:layout_width="match_parent"/>
 
-    <Button
-        android:text="UnLock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_unlock"
-        android:layout_alignBottom="@+id/editText_password"
-        android:layout_alignParentEnd="true"/>
-
     <TextView
         android:text="eLock Identifier: XXXXXXXXXXXX"
         android:layout_width="wrap_content"
@@ -36,18 +30,6 @@
         android:layout_marginTop="15dp"
         android:layout_below="@+id/editText_name"
         android:layout_alignParentStart="true"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/editText_password"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/adjustment_btns"
-        android:layout_alignParentStart="true"
-        tools:text="Password"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -71,6 +53,38 @@
             android:layout_height="match_parent"
             android:layout_weight=".5"
             android:id="@+id/btn_delete"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/adjustment_btns"
+        android:layout_alignParentStart="true"
+        android:id="@+id/password_and_unlock">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/editText_password"
+            android:hint="Password"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/adjustment_btns"
+            android:layout_alignParentStart="true"
+            tools:text="Password"/>
+
+        <Button
+            android:text="UnLock"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:id="@+id/btn_unlock"
+            android:layout_alignBottom="@+id/editText_password"
+            android:layout_alignParentEnd="true"/>
 
     </LinearLayout>
 </RelativeLayout>

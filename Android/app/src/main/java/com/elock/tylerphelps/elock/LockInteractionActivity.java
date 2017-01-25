@@ -1,6 +1,5 @@
 package com.elock.tylerphelps.elock;
 
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.pubnub.api.PNConfiguration;
@@ -9,11 +8,11 @@ import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.PubNub;
 import android.view.View;
 import android.widget.Button;
-import android.os.Handler.Callback;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.pubnub.api.PubNubError;
+import android.content.Context;
+import android.view.inputmethod.InputMethodManager;
 
 public class LockInteractionActivity extends AppCompatActivity {
 
@@ -27,7 +26,6 @@ public class LockInteractionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lock_interaction);
 
-        //TODO get lock from intent here
         this.dc = new DatabaseController(getApplicationContext());
         int position = getIntent().getIntExtra("eLockDbPosition", 0);
         this.lock = this.dc.getLocks().get(position);
@@ -57,6 +55,7 @@ public class LockInteractionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 sendUnlockMessage();
+                hideKeyboard();
             }
         });
 
@@ -68,6 +67,7 @@ public class LockInteractionActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
                 String newNickname = ((EditText) findViewById(R.id.editText_name)).getText().toString();
                 getDc().renicknameLock(getLock(), newNickname);
+                hideKeyboard();
             }
         });
 
@@ -123,5 +123,13 @@ public class LockInteractionActivity extends AppCompatActivity {
         this.pubnub.disconnect();
         setResult(1, null);
         finish();
+    }
+
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }
